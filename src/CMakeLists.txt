@@ -1,2 +1,2 @@
-add_library(stack stack.c)
-target_include_directories(stack PRIVATE ${PROJECT_SOURCE_DIR}/include)
+add_library(Stack STATIC stack.c)
+target_include_directories(Stack PRIVATE ${PROJECT_SOURCE_DIR}/include)
