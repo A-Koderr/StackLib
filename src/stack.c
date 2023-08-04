@@ -25,10 +25,10 @@ int stack_push(stack *S, void *key) {
         return -1;
     }
     if (key == NULL) {
-       fprintf(stderr, "stack_push : NULL ptr passed");
+       fprintf(stderr, "stack_push : NULL ptr passed\n");
        return -1;
     }
-    void *ptr = realloc(S->_top, sizeof(void *)*(S->_size+1));
+    void **ptr = realloc(S->_top, sizeof(void *)*(S->_size+1));
     if (ptr == NULL) {
         fprintf(stderr, "stack_push : Reallocation of ptr failed. \nRetry alloaction old mem block still intact.\n");
         return -2;
@@ -51,13 +51,25 @@ int stack_push(stack *S, void *key) {
 }
 
 void stack_pop(stack *S) {
-    free(S->_top[S->_size-1]);
-    S->_top[S->_size] = NULL;
-    void *ptr = realloc(S->_top, sizeof(void *)*(S->_size-1));
-    if(ptr == NULL) {
-        fprintf(stderr, "stack_pop : Realloc Failed, Memory corruption may occur.");
+    if (S->_size > 0) {
+        --S->_size;
+        free(S->_top[S->_size]);
+        S->_top[S->_size] = NULL;
+        void **ptr = NULL;
+        if(S->_size>0)
+            ptr = realloc(S->_top, sizeof(void *)*(S->_size));
+        else {
+            free(S->_top);
+            ptr = NULL;
+        }
+        if(ptr == NULL && S->_size>0) {
+            fprintf(stderr, "stack_pop : Realloc Failed, Memory corruption may occur.\n");
+        }
+        S->_top = ptr;
+        ptr = NULL;
+    } else {
+        fprintf(stderr, "stack_pop : Failed, Stack is empty!\n");
     }
-    --S->_size;
 }
 
 void stack_print(stack *S) {
@@ -82,7 +94,7 @@ void *_stack_push_LONG(void *ptr_long) {
     long *ptr = NULL;
     ptr = (long *)malloc(sizeof(long));
     if (ptr == NULL) {
-        fprintf(stderr, "stack_push : malloc failed while allocating %lu bytes.", sizeof(long));
+        fprintf(stderr, "stack_push : malloc failed while allocating %lu bytes.\n", sizeof(long));
         return NULL;
     }
     *ptr = *(long *)ptr_long;
@@ -97,7 +109,7 @@ void *_stack_push_STR(void *ptr_str) {
         ++i;
     ptr = malloc(sizeof(char)*(i+1));
     if (ptr == NULL) {
-        fprintf(stderr, "stack_push : malloc failed while allocating %lu.", sizeof(char)*(i+1));
+        fprintf(stderr, "stack_push : malloc failed while allocating %lu.\n", sizeof(char)*(i+1));
         return NULL;
     }
     strncpy(ptr, ptr_str, i);
