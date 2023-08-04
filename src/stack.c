@@ -73,14 +73,18 @@ void stack_pop(stack *S) {
 }
 
 void stack_print(stack *S) {
-    if (S->_stack_type == LONG) {
-        for(size_t i = S->_size; i>0; i--) {
-            printf("%ld\n",*(long*)S->_top[i-1]);
+    if (S->_size>0) {
+        if (S->_stack_type == LONG) {
+            for(size_t i = S->_size; i>0; i--) {
+                printf("%ld\n",*(long*)S->_top[i-1]);
+            }
+        }else if (S->_stack_type == STR) {
+            for(size_t i = S->_size; i>0; i--) {
+                printf("%s\n",(char *)S->_top[i-1]);
+            }
         }
-    }else if (S->_stack_type == STR) {
-        for(size_t i = S->_size; i>0; i--) {
-            printf("%s\n",(char *)S->_top[i-1]);
-        }
+    } else {
+        fprintf(stderr, "stack_print : Failed, Stack Empty!\n");
     }
 }
 
