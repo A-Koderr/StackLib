@@ -68,7 +68,7 @@ void stack_pop(stack *S) {
         S->_top = ptr;
         ptr = NULL;
     } else {
-        fprintf(stderr, "stack_pop : Failed, Stack is empty!\n");
+        fprintf(stderr, "stack_pop : Failed, Stack empty!\n");
     }
 }
 
