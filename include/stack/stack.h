@@ -11,5 +11,6 @@ typedef struct stack {
 
 stack *stack_init(enum types type);
 int stack_push(stack *S, void *key);
+void stack_pop(stack *S);
 void stack_print(stack *S);
 void stack_free(stack *S);

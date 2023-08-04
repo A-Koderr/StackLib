@@ -1,5 +1,4 @@
 #include "stack/stack.h"
-#include "stack/EnumTypes.h"
 #include <stddef.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -49,6 +48,16 @@ int stack_push(stack *S, void *key) {
     // Everything is fine
     ++S->_size;
     return 0;
+}
+
+void stack_pop(stack *S) {
+    free(S->_top[S->_size-1]);
+    S->_top[S->_size] = NULL;
+    void *ptr = realloc(S->_top, sizeof(void *)*(S->_size-1));
+    if(ptr == NULL) {
+        fprintf(stderr, "stack_pop : Realloc Failed, Memory corruption may occur.");
+    }
+    --S->_size;
 }
 
 void stack_print(stack *S) {
